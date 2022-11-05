@@ -8,26 +8,19 @@ public class SplitScreenTrigger : MonoBehaviour {
     [SerializeField] Camera player1Camera;
     [SerializeField] Camera player2Camera;
 
+    [SerializeField] GameObject player1;
+    [SerializeField] GameObject player2;
+
+    [SerializeField] private float speed = 10;
+
     private void Start() {
-        mainCamera.enabled = false;
+        mainCamera.enabled = true;
+        player1Camera.enabled = false;
+        player2Camera.enabled = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag.Equals("CameraTrigger")) {
-            player1Camera.enabled = false;
-            player2Camera.enabled = false;
-
-            mainCamera.enabled = true;
-        }
+    private void FixedUpdate() {
+        Vector3 cameraCoords = (player1.transform.position + player2.transform.position)/2;
+        transform.position = Vector3.MoveTowards(transform.position, cameraCoords + new Vector3(0,0,-10), Time.deltaTime * speed);
     }
-
-    private void OnTriggerExit2D(Collider2D other) {
-        if (other.tag.Equals("CameraTrigger")) {
-            player1Camera.enabled = true;
-            player2Camera.enabled = true;
-
-            mainCamera.enabled = false;
-        }
-    }
-
 }
