@@ -6,11 +6,12 @@ TagManager:
   tags:
   - PickUp
   - CameraTrigger
+  - Player2
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player and Obj
   - Water
   - UI
   - 

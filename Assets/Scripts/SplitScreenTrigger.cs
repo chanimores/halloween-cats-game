@@ -11,12 +11,17 @@ public class SplitScreenTrigger : MonoBehaviour {
     [SerializeField] GameObject player1;
     [SerializeField] GameObject player2;
 
+    [SerializeField] GameObject blackLine1;
+    [SerializeField] GameObject blackLine2;
+
     [SerializeField] private float speed = 10;
 
     private void Start() {
         mainCamera.enabled = true;
         player1Camera.enabled = false;
         player2Camera.enabled = false;
+        blackLine1.GetComponent<Renderer>().enabled = false; 
+        blackLine2.GetComponent<Renderer>().enabled = false; 
     }
 
     private void FixedUpdate() {

@@ -10,6 +10,8 @@ public class Player1Controller : MonoBehaviour
     [SerializeField] Camera mainCamera;
     [SerializeField] Camera player1Camera;
     [SerializeField] Camera player2Camera;
+    [SerializeField] GameObject blackLine1;
+    [SerializeField] GameObject blackLine2;
     private float movementX;
     private float movementY;
 
@@ -62,10 +64,13 @@ public class Player1Controller : MonoBehaviour
         
         if (other.tag.Equals("CameraTrigger")) {
             
+            
             if (player1Camera.gameObject.transform.position.x > player2Camera.gameObject.transform.position.x) {
                 Debug.Log("First one");
                 player1Camera.rect = new Rect (0.5f, 0f, 0.5f, 1f);
                 player2Camera.rect = new Rect (0f, 0f, 0.5f, 1f);
+
+                blackLine2.GetComponent<Renderer>().enabled = true; 
 
                 player1Camera.transform.position = Vector3.MoveTowards(player1Camera.transform.position, transform.position + new Vector3(0,0,-10), Time.deltaTime * 7);
  
@@ -74,11 +79,14 @@ public class Player1Controller : MonoBehaviour
                 player2Camera.rect = new Rect (0.5f, 0f, 0.5f, 1f);
                 player1Camera.rect = new Rect (0f, 0f, 0.5f, 1f);
 
+                blackLine1.GetComponent<Renderer>().enabled = true; 
+
                 player1Camera.transform.position = Vector3.MoveTowards(player1Camera.transform.position, transform.position + new Vector3(0,0,-10), Time.deltaTime * 7);
             }
 
             player1Camera.enabled = true;
             player2Camera.enabled = true;
+            
 
             mainCamera.enabled = false;
         }
@@ -101,6 +109,8 @@ public class Player1Controller : MonoBehaviour
         if (other.tag.Equals("CameraTrigger")) {
             player1Camera.enabled = false;
             player2Camera.enabled = false;
+            blackLine1.GetComponent<Renderer>().enabled = false; 
+            blackLine2.GetComponent<Renderer>().enabled = false; 
 
             mainCamera.enabled = true;
         }
