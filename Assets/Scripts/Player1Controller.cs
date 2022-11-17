@@ -20,12 +20,15 @@ public class Player1Controller : MonoBehaviour
     private GameObject lanternObj;
     Vector3 offset;
 
+    private SpriteRenderer sr;
+
     private Rigidbody2D rb;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
     }
 
     void FixedUpdate() {
@@ -33,8 +36,10 @@ public class Player1Controller : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A)) {
             dir.x = -1;
+            sr.flipX = true;
         } else if (Input.GetKey(KeyCode.D)) {
             dir.x = 1;
+            sr.flipX = false;
         }
 
         if (Input.GetKey(KeyCode.W)) {

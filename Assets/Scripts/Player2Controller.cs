@@ -11,47 +11,54 @@ public class Player2Controller : MonoBehaviour
 
     private Rigidbody2D rb;
     private SpriteRenderer sr;
-
-    private bool inPossessionRange;
     private bool possessing;
     private GameObject crate;
 
     float cooldown;
+
+    public LayerMask pickUpMask;
+    public Vector3 Direction { get; set; }
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-
-        inPossessionRange = false;
+        crate = new GameObject();
+        possessing = false;
     }
-
-    private void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag.Equals("PossessCrate")) {
-            inPossessionRange = true;
-            crate = other.gameObject;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other) {
-        if (other.tag.Equals("PossessCrate")) {
-            inPossessionRange = false;
-            
-        }
-    }
-
     void FixedUpdate() {
 
-        if (Input.GetKey("right ctrl") && inPossessionRange) {
-            crate.GetComponent<PossessCrate>().possessed = true;
-            crate.GetComponent<PossessCrate>().ghostEffect.GetComponent<SpriteRenderer>().enabled = true;
-            Debug.Log("POSSESSED");
-            possessing = true;
-            sr.enabled = false;
+        if (Input.GetKey("right ctrl")) {
 
-            cooldown = 1f;
+            if (cooldown <= 0) {
+
+                if (!possessing) {
+                    Collider2D pickUpItem = Physics2D.OverlapCircle(transform.position + Direction, 1f, pickUpMask);
+                    if (pickUpItem){
+                        crate = pickUpItem.gameObject;
+                        crate.GetComponent<PossessCrate>().possessed = true;
+                        crate.GetComponent<PossessCrate>().ghostEffect.GetComponent<SpriteRenderer>().enabled = true;
+
+                        possessing = true;
+                        sr.enabled = false;
+
+                        cooldown = 1f;
+                    }
+                } else if (possessing) {
+                    crate.GetComponent<PossessCrate>().possessed = false;
+                    crate.GetComponent<PossessCrate>().ghostEffect.GetComponent<SpriteRenderer>().enabled = false;
+
+                    possessing = false;
+                    sr.enabled = true;
+
+                    cooldown = 1f;
+                }
+            }
         }
+
+        if (!(cooldown < -1))
+            cooldown -= Time.deltaTime;
 
         if (!possessing) {
 
@@ -75,16 +82,7 @@ public class Player2Controller : MonoBehaviour
             
             GetComponent<Rigidbody2D>().velocity = speed * dir;
         } else {
-            cooldown -= Time.deltaTime;
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-
-            if (cooldown <= 0 && Input.GetKey("right ctrl")) {
-                crate.GetComponent<PossessCrate>().possessed = false;
-                crate.GetComponent<PossessCrate>().ghostEffect.GetComponent<SpriteRenderer>().enabled = false;
-                Debug.Log("UNPOSSESSED");
-                possessing = false;
-                sr.enabled = true;
-            }
         }
 
         
